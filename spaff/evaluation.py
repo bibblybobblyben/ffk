@@ -26,7 +26,12 @@ def nfield_diag_chi2(field1, field2, error, depth=1, amp=None):
         chi2 += np.sum(diffs**2/error[eval_region]**2)
     return chi2
 
+def chi2_score(field1, field2, efield):
+    return np.sum((field1-field2)**2/efield**2)
 
+def evaluate_chi2(SphereFit):
+    SphereFit.hyp_distance = chi2_score(SphereFit.data_hyp, SphereFit.data, SphereFit.error_map)
+    SphereFit.delta_hyp = (SphereFit.distance-SphereFit.hyp_distance)
 def shear_chi2(SphereFit):
     '''
     Function to evaluate the chi2 (diagonally) of a hypothesised shear field
@@ -36,6 +41,7 @@ def shear_chi2(SphereFit):
     '''
     chi2 = nfield_diag_chi2(SphereFit.shear_hyp, SphereFit.shear_data)
     SphereFit.distance = chi2
+    SphereFit.delta_hyp = chi2 # TODO Correct this for likelihood
     return
 
 
